@@ -1,13 +1,16 @@
 import tkinter as tk
 import customtkinter as ctk
+from ctypes import windll
 from PIL import Image, ImageTk
 
 import handle_csv as parsecsv
 from datetime import datetime
 import time
+import sort as sortdates
 
 ctk.set_appearance_mode("dark-blue")
 #index = 3
+other_window_open = False
 
 
 class AddWindow(ctk.CTkToplevel):
@@ -200,12 +203,14 @@ class EntryFrame(ctk.CTkCanvas):
     # DELETE FUNC DOES NOT WORK when getting to last 2-3 entries, dk why.
     # TODOOOO
     def delete(self):
+        other_window_open == True
         #print("CURR INDEX DELETING: " + str(self.index))
         parsecsv.delete_csv_entry("Tasks.csv", self.title)
         #print(len(entry_frames))
         # for i in range(self.index, len(entry_frames)):
         #     entry_frames[i].place_forget()
         update_table("Tasks.csv")
+        print(other_window_open)
 
 
     # def add_window(self):
@@ -242,30 +247,77 @@ class NavBarFrame(ctk.CTkCanvas):
         #self.toplevel_window = None
 
     def add_window(self):
-        print("adding window")
         new_toplevel = AddWindow()
 
+def maketransparent(w):
+    # the translated windll part...
+    # a COLORREF structure is a reverse RGB order int!
+    # see https://www.pinvoke.net/search.aspx?search=COLORREF&namespace=[All]
+    # here we chose nearly black so real black (#000000) still shows up
+    colorkey = 0x00030201
+    hwnd = w.winfo_id()
+    wnd_exstyle = windll.user32.GetWindowLongA(hwnd, -20)  # GWL_EXSTYLE
+    new_exstyle = wnd_exstyle | 0x00080000  # WS_EX_LAYERED
+    windll.user32.SetWindowLongA(hwnd, -20, new_exstyle)  # GWL_EXSTYLE
+    windll.user32.SetLayeredWindowAttributes(hwnd, colorkey, 255, 0x00000001)  # LWA_COLORKEY = 0x00000001
 
+
+def get_cat():
+    data = parsecsv.read_csv("Tasks.csv")
+    filename = sortdates.cat_pic(data)
+    return filename
+
+
+def create_new_window(event):
+    if (other_window_open == False):
+        win = ctk.CTkToplevel(root)
+        win.geometry('400x200')
+        #win.title("New Window")
+        #win.attributes('-fullscreen', True)  # Make the window full-screen
+        #win.after(0, lambda: win.state('zoomed'))
+        canvas = tk.Canvas(win, width=2000, height=2000, background='#000000')
+        label = tk.Label(canvas,borderwidth=0,bg='#000000')
+        label.pack()
+        #button = tk.Button(canvas, text="HAI")
+        canvas.grid(row=0, column=0, sticky='nesw')
+        #canvas.pack()
+        #window.overrideredirect(True)
+        win.wm_attributes('-transparentcolor','#000000')
+        win.wm_attributes('-topmost', True)
+        cvs_upper=tk.Canvas(win, background='#010203') #dont use all black, screws up any black trext on your canvas...
+        #cvs_upper.create_rectangle(325, 25, 375, 175, fill='red')
+        cvs_upper.grid(row=0, column=0, sticky='nesw')
+        #cvs_upper.place(x=10, y=10)
+        canvas.create_window(0, 0, anchor=tk.NW, window=label)
+
+        filename = get_cat()
+        image1 = Image.open(filename)
+        test = ImageTk.PhotoImage(image1)
+        label1 = ctk.CTkLabel(cvs_upper, height = 500, width = 500, fg_color="transparent", image=test)
+        #label1.image = test
+        label1.place(x=500, y=80)
+
+        win.after(0, lambda:win.state('zoomed'))
+        win.after(0, lambda:maketransparent(cvs_upper))
+        win.mainloop()
 
 root = ctk.CTk(fg_color="#041421") 
 root.title("planner")
-#root._fg_color("black")
 nav = NavBarFrame(root)
-#menu = MenuFrame(root)
 nav.place(relx=0.5, rely=0.05, anchor="center")
-#nav.grid(row=0, column=1, padx=0, pady=5, sticky="nw", columnspan=2)
-#menu.grid(row=0, column=1, padx=0, pady=0, sticky="nw", rowspan=4)
+
 
 # Use a list to store EntryFrames dynamically
 entry_frames = []
 
 # new update_table based on csv functions
 def update_table(filename):
+    global other_window_open 
+    other_window_open = True
     for entry_frame in entry_frames:
         entry_frame.place_forget()
     entry_frames.clear()
     data = parsecsv.read_csv(filename)
-    print(len(data))
     for i in range(1, len(data)):
         entry_frames.append(EntryFrame(root, data[i][0], data[i][1], data[i][2], i-1))
     for index, entry_frame in enumerate(entry_frames, start=1):
@@ -274,7 +326,8 @@ def update_table(filename):
         else:
             # omg DED this is based on com resolution
             entry_frame.place(relx=0.5, rely=0.05 + (index * 0.069), anchor="center")
-    #print("LEN ENTRY IN UPDATE: " + str(len(entry_frames)))
+    other_window_open = False
+
 
 # Calculate the required width and height based on widget sizes
 width = max(root.winfo_reqwidth(), sum(entry_frame.winfo_reqwidth() for entry_frame in entry_frames))
@@ -288,4 +341,5 @@ width = max(root.winfo_reqwidth(), sum(entry_frame.winfo_reqwidth() for entry_fr
 height = max(root.winfo_reqheight(), sum(entry_frame.winfo_reqheight() for entry_frame in entry_frames))
 
 update_table("Tasks.csv")
+root.bind("<Unmap>", create_new_window)
 root.mainloop()
