@@ -4,6 +4,14 @@ from PIL import Image, ImageTk
 
 ctk.set_appearance_mode("dark-blue")
 
+class AddWindow(ctk.CTkToplevel):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.geometry("400x300")
+
+        self.label = ctk.CTkLabel(self, text="HAI")
+        self.label.pack(padx=20, pady=20)
+
 class EntryFrame(ctk.CTkFrame):
     def __init__(self, master, title, description, deadline, index):
         super().__init__(master)
@@ -43,7 +51,15 @@ class EntryFrame(ctk.CTkFrame):
         bin = Image.open("./bin.png").resize((20,20))
         self.delete_button = ctk.CTkButton(self, width= 2, height = 2, text="", corner_radius=8, text_color="black", fg_color="transparent",image=ImageTk.PhotoImage(bin))
         self.delete_button.grid(row=0, column=4, padx=3, pady=(10,0), sticky="s")
-        
+
+        self.toplevel_window = None
+    
+    def add_window(self):
+        if self.toplevel_window is None or not self.toplevel_window.winfo_exists():
+            newWindow = AddWindow(self)
+        else:
+            self.toplevel_window.focus()
+            
 class NavBarFrame(ctk.CTkFrame):
     def __init__(self, master):
         super().__init__(master)
