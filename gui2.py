@@ -203,8 +203,8 @@ class EntryFrame(ctk.CTkCanvas):
         #print("CURR INDEX DELETING: " + str(self.index))
         parsecsv.delete_csv_entry("Tasks.csv", self.title)
         #print(len(entry_frames))
-        for i in range(self.index, len(entry_frames)):
-            entry_frames[i].place_forget()
+        # for i in range(self.index, len(entry_frames)):
+        #     entry_frames[i].place_forget()
         update_table("Tasks.csv")
 
 
@@ -261,8 +261,11 @@ entry_frames = []
 
 # new update_table based on csv functions
 def update_table(filename):
+    for entry_frame in entry_frames:
+        entry_frame.place_forget()
     entry_frames.clear()
     data = parsecsv.read_csv(filename)
+    print(len(data))
     for i in range(1, len(data)):
         entry_frames.append(EntryFrame(root, data[i][0], data[i][1], data[i][2], i-1))
     for index, entry_frame in enumerate(entry_frames, start=1):
