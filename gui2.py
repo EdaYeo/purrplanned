@@ -60,10 +60,6 @@ class AddWindow(ctk.CTkToplevel):
                            pady=20, sticky="ew")
         
     
-    def getInput(self):
-        print(self.remarksEntry.get())
-        return(self.remarksEntry.get())
-    
     def addToCSV(self):
         data = {
             'Title': self.nameEntry.get(),
@@ -74,8 +70,10 @@ class AddWindow(ctk.CTkToplevel):
 
         parsecsv.write_to_csv(data, 'Tasks.csv')
         print(data)
-        self.withdraw()
-
+        entry_frame = EntryFrame(root, self.nameEntry.get(), self.remarksEntry.get(), datetime.strptime(self.deadlineEntry.get(), '%d-%m-%Y %H:%M:%S'), 3)
+        entry_frames.append(entry_frame)
+        update_table(entry_frames)
+        # index += 1
 
 class EditWindow(ctk.CTkToplevel):
     def __init__(self, *args, **kwargs):
@@ -145,7 +143,7 @@ class EditWindow(ctk.CTkToplevel):
 
         parsecsv.write_to_csv(data, 'Tasks.csv')
         print(data)
-        entry_frame.append(EntryFrame(root, self.nameEntry.get(), self.remarksEntry.get(), self.deadlineEntry.get(), index))
+        entry_frames.append(EntryFrame(root, self.nameEntry.get(), self.remarksEntry.get(), self.deadlineEntry.get(), index))
         entry_frame.place(relx=0.5, rely=0.05 + (index * 0.069), anchor="center")
         index += 1
         
@@ -241,7 +239,6 @@ class NavBarFrame(ctk.CTkCanvas):
 
 
 
-
 root = ctk.CTk(fg_color="#041421") 
 root.title("planner")
 #root._fg_color("black")
@@ -253,20 +250,28 @@ nav.place(relx=0.5, rely=0.05, anchor="center")
 
 # Use a list to store EntryFrames dynamically
 entry_frames = []
-entry_frames.append(EntryFrame(root, "TESTING", "Testing Description", "10/10/20", 1))
+entry_frames.append(EntryFrame(root, "TESTING3", "Testing Description", "10/10/20", 1))
 entry_frames.append(EntryFrame(root, "TESTING2", "Testing2 Description", "1/1/23", 2))
 entry_frames.append(EntryFrame(root, "TESTING2", "Testing2 Description", "1/1/23", 2))
 
-# Use enumerate to get both index and entry_frame
-for index, entry_frame in enumerate(entry_frames, start=1):
-    # if(index == 0):
-    #     entry_frame.grid(row=index, column=1, padx=0, pady=(2,0), sticky="nw")
-    # else:
-    #     entry_frame.grid(row=index, column=1, padx=0, pady=0, sticky="nw")
-    if (index == 0):
-        entry_frame.place(relx=0.5, rely=0.05 + (index * 0.1), anchor="center")
-    else:
-        entry_frame.place(relx=0.5, rely=0.05 + (index * 0.069), anchor="center")
+
+# # Use enumerate to get both index and entry_frame
+# for index, entry_frame in enumerate(entry_frames, start=1):
+#     # if(index == 0):
+#     #     entry_frame.grid(row=index, column=1, padx=0, pady=(2,0), sticky="nw")
+#     # else:
+#     #     entry_frame.grid(row=index, column=1, padx=0, pady=0, sticky="nw")
+#     if (index == 0):
+#         entry_frame.place(relx=0.5, rely=0.05 + (index * 0.1), anchor="center")
+#     else:
+#         entry_frame.place(relx=0.5, rely=0.05 + (index * 0.069), anchor="center")
+
+def update_table(entry_frames):
+    for index, entry_frame in enumerate(entry_frames, start=1):
+        if (index == 0):
+            entry_frame.place(relx=0.5, rely=0.05 + (index * 0.1), anchor="center")
+        else:
+            entry_frame.place(relx=0.5, rely=0.05 + (index * 0.069), anchor="center")
 
 # Calculate the required width and height based on widget sizes
 width = max(root.winfo_reqwidth(), sum(entry_frame.winfo_reqwidth() for entry_frame in entry_frames))
@@ -279,4 +284,5 @@ root.update_idletasks()
 width = max(root.winfo_reqwidth(), sum(entry_frame.winfo_reqwidth() for entry_frame in entry_frames))
 height = max(root.winfo_reqheight(), sum(entry_frame.winfo_reqheight() for entry_frame in entry_frames))
 
+update_table(entry_frames)
 root.mainloop()
