@@ -6,6 +6,7 @@ from PIL import Image, ImageTk
 import handle_csv as parsecsv
 from datetime import datetime
 import time
+import sort as sortdates
 
 ctk.set_appearance_mode("dark-blue")
 #index = 3
@@ -260,6 +261,13 @@ def maketransparent(w):
     windll.user32.SetWindowLongA(hwnd, -20, new_exstyle)  # GWL_EXSTYLE
     windll.user32.SetLayeredWindowAttributes(hwnd, colorkey, 255, 0x00000001)  # LWA_COLORKEY = 0x00000001
 
+
+def get_cat():
+    data = parsecsv.read_csv("Tasks.csv")
+    filename = sortdates.cat_pic(data)
+    return filename
+
+
 def create_new_window(event):
     if (other_window_open == False):
         win = ctk.CTkToplevel(root)
@@ -282,11 +290,12 @@ def create_new_window(event):
         #cvs_upper.place(x=10, y=10)
         canvas.create_window(0, 0, anchor=tk.NW, window=label)
 
-        image1 = Image.open("actual_kalm_cat.PNG")
+        filename = get_cat()
+        image1 = Image.open(filename)
         test = ImageTk.PhotoImage(image1)
         label1 = ctk.CTkLabel(cvs_upper, height = 500, width = 500, fg_color="transparent", image=test)
         #label1.image = test
-        label1.place(x=550, y=100)
+        label1.place(x=500, y=80)
 
         win.after(0, lambda:win.state('zoomed'))
         win.after(0, lambda:maketransparent(cvs_upper))
