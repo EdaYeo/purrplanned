@@ -11,7 +11,7 @@ class ToplevelWindow(customtkinter.CTkToplevel):
 class App(customtkinter.CTk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.geometry("500x400")
+        self.geometry("300x200")
 
         self.button_1 = customtkinter.CTkButton(self, text="open toplevel", command=self.open_toplevel)
         self.button_1.pack(side="top", padx=20, pady=20)

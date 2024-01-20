@@ -1,34 +1,35 @@
-import tkinter as tk
+from tkinter import *
 from PIL import Image, ImageTk
+import win32gui
+import win32con
 
-class ClickThroughWindow(tk.Tk):
-    def __init__(self, image_path, *args, **kwargs):
-        tk.Tk.__init__(self, *args, **kwargs)
+def setClickthrough(hwnd):
+    print("setting window properties")
+    try:
+        styles = win32gui.GetWindowLong(hwnd, win32con.GWL_EXSTYLE)
+        styles = win32con.WS_EX_LAYERED | win32con.WS_EX_TRANSPARENT
+        win32gui.SetWindowLong(hwnd, win32con.GWL_EXSTYLE, styles)
+        win32gui.SetLayeredWindowAttributes(hwnd, 0, 255, win32con.LWA_ALPHA)
+    except Exception as e:
+        print(e)
 
-        self.overrideredirect(True)  # Remove window decorations
-        self.wm_attributes("-transparentcolor", "black")  # Set black as the transparent color
+# Dimensions
+width = 1920 #self.winfo_screenwidth()
+height = 1080 #self.winfo_screenheight()
 
-        # Load and display the image
-        image = Image.open(image_path)
-        self.image = ImageTk.PhotoImage(image)
-        label = tk.Label(self, image=self.image, bd=0)
-        label.pack()
+root = Tk()
+root.geometry('%dx%d' % (width, height))
+root.title("Applepie")
+root.attributes('-transparentcolor', 'white', '-topmost', 1)
+root.config(bg = '#add123')
+root.wm_attributes('-transparentcolor','#add123')
+# root.attributes("-alpha", 0.25)
+root.wm_attributes("-topmost", 1)
+bg = Canvas(root, width=width, height=height, bg='white')
 
-        # Bind events for dragging
-        label.bind("<B1-Motion>", self.mouse_motion)
-        label.bind("<Button-1>", self.mouse_press)
+setClickthrough(bg.winfo_id())
 
-    def mouse_motion(self, event):
-        x, y = event.x, event.y
-        new_x = self.winfo_x() + x
-        new_y = self.winfo_y() + y
-        new_geometry = f"+{new_x}+{new_y}"
-        self.geometry(new_geometry)
-
-    def mouse_press(self, event):
-        self.x, self.y = event.x, event.y
-
-if __name__ == "__main__":
-    image_path = "./hehe.jpg"  # Specify the path to your image file
-    window = ClickThroughWindow(image_path)
-    window.mainloop()
+frame = ImageTk.PhotoImage(file="hehe.png")
+bg.create_image(1920/2, 1080/2, image=frame)
+bg.pack()
+root.mainloop()
