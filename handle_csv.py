@@ -116,13 +116,13 @@ csv_filename = 'tasks.csv'
 csv_filename = 'tasks.csv'
 
 # Specify the title of the entry to edit
-title_to_edit = 'Task 1'
+title_to_edit = 'Updated Task'
 
 # Specify the updated data for the entry
 updated_entry_data = {
     'Title': 'Updated Task',
     'Description': 'Updated description',
-    'Deadline': '2024-02-15 12:00:00',
+    'Deadline': datetime.strptime('2024-01-31 20:00:00', '%Y-%m-%d %H:%M:%S'),
     'Completion Status': 'Complete'
 }
 
