@@ -236,16 +236,24 @@ class NavBarFrame(ctk.CTkCanvas):
         self.config(highlightthickness=0, bg=root["bg"])
         self._corner_radius = 0
 
+        logo = Image.open("./purrplanned.png").resize((100,100))
+
+        # Create a Label widget to display the logo
+        self.logo_label = ctk.CTkLabel(self, image=ImageTk.PhotoImage(logo))
+        self.logo_label.grid(row=0, column=0, sticky="nw", padx=5, pady=5)
+        self.logo_label.configure(text="")
+
+
         self.entry_text = ctk.CTkTextbox(master=self, text_color="#D0D6D6", height=3, width=200, fg_color="transparent",
                                          activate_scrollbars=False, border_width=0, border_color="#000000",
                                          corner_radius=0)
-        self.entry_text.grid(row=0, column=0, sticky="nw")
+        self.entry_text.grid(row=0, column=1)
         self.entry_text.insert("0.0", "Planner!")
         self.entry_text.configure(state="disabled")
 
         add = Image.open("./add.png").resize((120,28))
         self.add_button = ctk.CTkButton(self, width= 2, height = 2, text="", corner_radius=0, command=self.add_window, text_color="black", fg_color="transparent",image=ImageTk.PhotoImage(add))
-        self.add_button.grid(row=0, column=1, padx=23, pady=(3,0), sticky="e")
+        self.add_button.grid(row=0, column=2, padx=23, pady=(3,0), sticky="e")
 
     def add_window(self):
         new_toplevel = AddWindow()
