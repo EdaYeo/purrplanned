@@ -9,11 +9,10 @@ from datetime import datetime
 import sort as sortdates
 
 ctk.set_appearance_mode("dark-blue")
-#index = 3
 other_window_open = False
 
 if not os.path.exists('Tasks.csv'):
-    # File doesn't exist, create a new file and write data
+    # If file doesn't exist, create a new file and write data
     header = ['Title', 'Description', 'Deadline', 'Completion Status']
     with open('Tasks.csv', mode='w', newline='') as file:
         writer = csv.DictWriter(file, fieldnames=header)
@@ -22,9 +21,6 @@ if not os.path.exists('Tasks.csv'):
 
 
 class AddWindow(ctk.CTkToplevel):
-    # I think mine doesnt work cause its catering to my system which is in light mode, we didnt
-    # have styling for this
-    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.attributes("-topmost", True)
@@ -169,11 +165,7 @@ class EditWindow(ctk.CTkToplevel):
         update_table("Tasks.csv")
         self.withdraw()
 
-
-
-
 class EntryFrame(ctk.CTkCanvas):
-
     def __init__(self, master, title, description, deadline, index):
         super().__init__(master)
         self.index = index
@@ -220,7 +212,6 @@ class EntryFrame(ctk.CTkCanvas):
         new_toplevel = EditWindow(self.title, self.deadline, self.description)
     
     # DELETE FUNC DOES NOT WORK when getting to last 2-3 entries, dk why.
-    # TODOOOO
     def delete(self):
         other_window_open == True
         parsecsv.delete_csv_entry("Tasks.csv", self.title)
@@ -242,7 +233,6 @@ class NavBarFrame(ctk.CTkCanvas):
         self.logo_label = ctk.CTkLabel(self, image=ImageTk.PhotoImage(logo))
         self.logo_label.grid(row=0, column=0, sticky="nw", padx=5, pady=5)
         self.logo_label.configure(text="")
-
 
         self.entry_text = ctk.CTkTextbox(master=self, text_color="#D0D6D6", height=3, width=200, fg_color="transparent",
                                          activate_scrollbars=False, border_width=0, border_color="#000000",
@@ -272,7 +262,6 @@ def get_cat():
     filename = sortdates.cat_pic(data)
     return filename
 
-
 def create_new_window(event):
     if (other_window_open == False):
         win = ctk.CTkToplevel(root)
@@ -283,7 +272,7 @@ def create_new_window(event):
         canvas.grid(row=0, column=0, sticky='nesw')
         win.wm_attributes('-transparentcolor','#000000')
         win.wm_attributes('-topmost', True)
-        cvs_upper=tk.Canvas(win, background='#010203') #dont use all black, screws up any black trext on your canvas...
+        cvs_upper=tk.Canvas(win, background='#010203') # Don't use all black to prevent errors with black text on canvas
         cvs_upper.grid(row=0, column=0, sticky='nesw')
         canvas.create_window(0, 0, anchor=tk.NW, window=label)
 
@@ -306,7 +295,6 @@ nav.place(relx=0.5, rely=0.05, anchor="center")
 # Use a list to store EntryFrames dynamically
 entry_frames = []
 
-# new update_table based on csv functions
 def update_table(filename):
     global other_window_open 
     other_window_open = True
@@ -320,7 +308,6 @@ def update_table(filename):
         if (index == 0):
             entry_frame.place(relx=0.5, rely=0.05 + (index * 0.1), anchor="center")
         else:
-            # omg DED this is based on com resolution
             entry_frame.place(relx=0.5, rely=0.05 + (index * 0.069), anchor="center")
     other_window_open = False
 
@@ -331,6 +318,7 @@ height = max(root.winfo_reqheight(), sum(entry_frame.winfo_reqheight() for entry
 
 root.after(0, lambda:root.state('zoomed'))
 root.minsize(800, 800)
+
 # Update the window geometry
 root.update_idletasks()
 width = max(root.winfo_reqwidth(), sum(entry_frame.winfo_reqwidth() for entry_frame in entry_frames))
