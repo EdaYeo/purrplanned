@@ -199,11 +199,11 @@ class EntryFrame(ctk.CTkCanvas):
         self.task_description.insert("0.0", description)
         self.task_description.configure(state="disabled")
 
-        pencil = Image.open("./pencil.png").resize((20,20))
+        pencil = Image.open("./Assets/pencil.png").resize((20,20))
         self.edit_button = ctk.CTkButton(self, width= 2, height = 2, text="", corner_radius=8, command=self.edit, text_color="black", fg_color="transparent",image=ImageTk.PhotoImage(pencil))
         self.edit_button.grid(row=0, column=3, padx=0, pady=(10,0), sticky="s")
 
-        bin = Image.open("./bin.png").resize((20,20))
+        bin = Image.open("./Assets/bin.png").resize((20,20))
         self.delete_button = ctk.CTkButton(self, width= 2, height = 2, text="", corner_radius=8, command=self.delete, text_color="black", fg_color="transparent",image=ImageTk.PhotoImage(bin))
         self.delete_button.grid(row=0, column=4, padx=3, pady=(10,0), sticky="s")
 
@@ -227,7 +227,7 @@ class NavBarFrame(ctk.CTkCanvas):
         self.config(highlightthickness=0, bg=root["bg"])
         self._corner_radius = 0
 
-        logo = Image.open("./purrplanned.png").resize((100,100))
+        logo = Image.open("./Assets/purrplanned.png").resize((100,100))
 
         # Create a Label widget to display the logo
         self.logo_label = ctk.CTkLabel(self, image=ImageTk.PhotoImage(logo))
@@ -241,7 +241,7 @@ class NavBarFrame(ctk.CTkCanvas):
         self.entry_text.insert("0.0", "Planner!")
         self.entry_text.configure(state="disabled")
 
-        add = Image.open("./add.png").resize((120,28))
+        add = Image.open("./Assets/add.png").resize((120,28))
         self.add_button = ctk.CTkButton(self, width= 2, height = 2, text="", corner_radius=0, command=self.add_window, text_color="black", fg_color="transparent",image=ImageTk.PhotoImage(add))
         self.add_button.grid(row=0, column=2, padx=23, pady=(3,0), sticky="e")
 
