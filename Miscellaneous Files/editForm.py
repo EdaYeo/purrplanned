@@ -12,7 +12,9 @@ class AddWindow(ctk.CTkToplevel):
  
         # Name Label
         self.nameLabel = ctk.CTkLabel(self,
-                                text="Name")
+                                text="Name", text_color="#D0D6D6", height=3, width=200, 
+                                fg_color="transparent", activate_scrollbars=False, border_width=0, 
+                                border_color="#4C7273", corner_radius=0)
         self.nameLabel.grid(row=0, column=0,
                             padx=20, pady=20,
                             sticky="ew")

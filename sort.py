@@ -39,25 +39,3 @@ def cat_pic(data):
         return "sweat.PNG"
     else:
         return "calm.PNG"
-
-# data = [
-#     ("Item1", "Description1", datetime(2024, 1, 21, 5, 40, 0)),
-#     ("Item2", "Description2", datetime(2024, 1, 21, 7, 30, 0)),
-#     # ... more data ...
-# ]
-
-# print(cat_pic(data))
-
-# remaining_time = time_till_due(data)
-# print(remaining_time)
-# Example Usage:
-# csv_filename = 'tasks.csv'
-# unsorted_tuples = handle_csv.read_csv(csv_filename)
-# sorted_tuples = sort_datetime(unsorted_tuples)
-# print(sorted_tuples)
-
-#date = "2024-01-01 20:00:00"
-#print(date[0:4])
-#convert_to_datetime("2024-01-01 20:00:00")
-
-
