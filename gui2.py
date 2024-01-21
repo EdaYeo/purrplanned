@@ -2,67 +2,82 @@ import tkinter as tk
 import customtkinter as ctk
 from ctypes import windll
 from PIL import Image, ImageTk
-
+import csv
+import os
 import handle_csv as parsecsv
 from datetime import datetime
-import time
 import sort as sortdates
 
 ctk.set_appearance_mode("dark-blue")
 #index = 3
 other_window_open = False
 
+if not os.path.exists('Tasks.csv'):
+    # File doesn't exist, create a new file and write data
+    header = ['Title', 'Description', 'Deadline', 'Completion Status']
+    with open('Tasks.csv', mode='w', newline='') as file:
+        writer = csv.DictWriter(file, fieldnames=header)
+        writer.writeheader()
+    print(f"New file {'Tasks.csv'} initialised")
+
 
 class AddWindow(ctk.CTkToplevel):
     # I think mine doesnt work cause its catering to my system which is in light mode, we didnt
     # have styling for this
+    
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.attributes("-topmost", True)
-        self.title("Add Task")
-        #self.config(highlightthickness=0, bg=root["bg"])   
- 
-        # Title Label
+        self.title("Add Task")        
+        self.config(highlightthickness=0, bg=root["bg"]) 
+
+        # Title Label   
         self.nameLabel = ctk.CTkLabel(self,
-                                text="Title")
+                                text="Title", text_color="#D0D6D6", fg_color="#4C7273",
+                                width=100, corner_radius=0)
         self.nameLabel.grid(row=0, column=0,
                             padx=20, pady=20,
                             sticky="ew")
- 
+         
         # Name Entry Field
         self.nameEntry = ctk.CTkEntry(self,
-                          placeholder_text="")
+                          placeholder_text="", text_color="#000000", fg_color="#ffffff",
+                          border_width=0, border_color="#000000", corner_radius=0)
         self.nameEntry.grid(row=0, column=1,
                             columnspan=3, padx=20,
                             pady=20, sticky="ew")
  
         # Deadline Label
-        self.deadlineLabel = ctk.CTkLabel(self, text="Deadline")
+        self.deadlineLabel = ctk.CTkLabel(self, text="Deadline", text_color="#D0D6D6", fg_color="#4C7273",
+                                          width=100, corner_radius=0)
         self.deadlineLabel.grid(row=1, column=0,
                            padx=20, pady=20,
                            sticky="ew")
  
         # Deadline Field
         self.deadlineEntry = ctk.CTkEntry(self,
-                            placeholder_text="DD-MM-YYYY HH:MM:SS")
+                            placeholder_text="DD-MM-YYYY HH:MM:SS", text_color="#000000", fg_color="#ffffff",
+                            border_width=0, border_color="#000000", corner_radius=0)
         self.deadlineEntry.grid(row=1, column=1,
                            columnspan=3, padx=20,
                            pady=20, sticky="ew")
         
         # Remarks Label
-        self.remarksLabel = ctk.CTkLabel(self, text="Description")
+        self.remarksLabel = ctk.CTkLabel(self, text="Description", text_color="#D0D6D6", fg_color="#4C7273",
+                                         width=100, corner_radius=0)
         self.remarksLabel.grid(row=2, column=0,
                            padx=20, pady=20,
                            sticky="ew")
  
         # Remarks Field
         self.remarksEntry = ctk.CTkEntry(self,
-                            placeholder_text="", width=500)
+                            placeholder_text="", width=500, text_color="#000000", fg_color="#ffffff",
+                            border_width=0, border_color="#000000", corner_radius=0)
         self.remarksEntry.grid(row=2, column=1,
                            columnspan=5, padx=20,
                            pady=20, sticky="ew")
 
-        self.submit_button = ctk.CTkButton(self, text="SUBMIT", command=self.addToCSV)
+        self.submit_button = ctk.CTkButton(self, text="SUBMIT", command=self.addToCSV, corner_radius=0)
         self.submit_button.grid(row=3, column=1,
                            columnspan=5, padx=20,
                            pady=20, sticky="ew")
@@ -79,60 +94,64 @@ class AddWindow(ctk.CTkToplevel):
         parsecsv.write_to_csv(data, 'Tasks.csv')
         print(parsecsv.read_csv("Tasks.csv")[1][0])
         print(data)
-        #entry_frame = EntryFrame(root, self.nameEntry.get(), self.remarksEntry.get(), datetime.strptime(self.deadlineEntry.get(), '%d-%m-%Y %H:%M:%S'), 3)
-        #entry_frames.append(entry_frame)
         update_table("Tasks.csv")
         self.withdraw()
-        # index += 1
 
 class EditWindow(ctk.CTkToplevel):
     def __init__(self, edit_title, edit_date, edit_desc, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.attributes("-topmost", True)
-        self.title("Add Task")
-        self.edit_title = edit_title   
+        self.title("Edit Task")
+        self.edit_title = edit_title
+        self.config(highlightthickness=0, bg=root["bg"]) 
  
         # Title Label
         self.nameLabel = ctk.CTkLabel(self,
-                                text="Title")
+                                text="Title", text_color="#D0D6D6", fg_color="#4C7273",
+                                width=100, corner_radius=0)
         self.nameLabel.grid(row=0, column=0,
                             padx=20, pady=20,
                             sticky="ew")
  
         # Name Entry Field
         self.nameEntry = ctk.CTkEntry(self,
-                          placeholder_text=edit_title)
+                          placeholder_text=edit_title, text_color="#000000", fg_color="#ffffff",
+                            border_width=0, border_color="#000000", corner_radius=0)
         self.nameEntry.grid(row=0, column=1,
                             columnspan=3, padx=20,
                             pady=20, sticky="ew")
  
         # Deadline Label
-        self.deadlineLabel = ctk.CTkLabel(self, text="Deadline")
+        self.deadlineLabel = ctk.CTkLabel(self, text="Deadline", text_color="#D0D6D6", fg_color="#4C7273",
+                                width=100, corner_radius=0)
         self.deadlineLabel.grid(row=1, column=0,
                            padx=20, pady=20,
                            sticky="ew")
  
         # Deadline Field
         self.deadlineEntry = ctk.CTkEntry(self,
-                            placeholder_text=edit_date)
+                            placeholder_text=edit_date, text_color="#000000", fg_color="#ffffff",
+                            border_width=0, border_color="#000000", corner_radius=0)
         self.deadlineEntry.grid(row=1, column=1,
                            columnspan=3, padx=20,
                            pady=20, sticky="ew")
         
         # Remarks Label
-        self.remarksLabel = ctk.CTkLabel(self, text="Description")
+        self.remarksLabel = ctk.CTkLabel(self, text="Description", text_color="#D0D6D6", fg_color="#4C7273",
+                                width=100, corner_radius=0)
         self.remarksLabel.grid(row=2, column=0,
                            padx=20, pady=20,
                            sticky="ew")
  
         # Remarks Field
         self.remarksEntry = ctk.CTkEntry(self,
-                            placeholder_text=edit_desc, width=500)
+                            placeholder_text=edit_desc, width=500, text_color="#000000", fg_color="#ffffff",
+                            border_width=0, border_color="#000000", corner_radius=0)
         self.remarksEntry.grid(row=2, column=1,
                            columnspan=5, padx=20,
                            pady=20, sticky="ew")
 
-        self.submit_button = ctk.CTkButton(self, text="SUBMIT", command= self.editCSV)
+        self.submit_button = ctk.CTkButton(self, text="SUBMIT", command= self.editCSV, corner_radius=0)
         self.submit_button.grid(row=3, column=1,
                            columnspan=5, padx=20,
                            pady=20, sticky="ew")
@@ -204,30 +223,17 @@ class EntryFrame(ctk.CTkCanvas):
     # TODOOOO
     def delete(self):
         other_window_open == True
-        #print("CURR INDEX DELETING: " + str(self.index))
         parsecsv.delete_csv_entry("Tasks.csv", self.title)
-        #print(len(entry_frames))
-        # for i in range(self.index, len(entry_frames)):
-        #     entry_frames[i].place_forget()
         update_table("Tasks.csv")
         print(other_window_open)
 
-
-    # def add_window(self):
-    #     if self.toplevel_window is None:
-    #         self.toplevel_window = AddWindow(self)
-    #     else:
-    #         self.toplevel_window.focus()
 
 class NavBarFrame(ctk.CTkCanvas):
     def __init__(self, master):
         super().__init__(master)
         self.grid_rowconfigure(0, weight=1)  # configure grid system
         self.grid_columnconfigure(0, weight=1)
-        #self._border_width = 1
-        #self._fg_color = "transparent"
         self.config(highlightthickness=0, bg=root["bg"])
-        #self._border_color = "transparent"
         self._corner_radius = 0
 
         self.entry_text = ctk.CTkTextbox(master=self, text_color="#D0D6D6", height=3, width=200, fg_color="transparent",
@@ -240,20 +246,11 @@ class NavBarFrame(ctk.CTkCanvas):
         add = Image.open("./add.png").resize((120,28))
         self.add_button = ctk.CTkButton(self, width= 2, height = 2, text="", corner_radius=0, command=self.add_window, text_color="black", fg_color="transparent",image=ImageTk.PhotoImage(add))
         self.add_button.grid(row=0, column=1, padx=23, pady=(3,0), sticky="e")
-        #self.add_button = ctk.CTkButton(self, corner_radius=0, text_color="black",fg_color="transparent",image=ImageTk.PhotoImage(add))
-        #self.add_button.grid(row=0, column=1, padx=221, pady=(3, 0), sticky="e")
-
-        
-        #self.toplevel_window = None
 
     def add_window(self):
         new_toplevel = AddWindow()
 
 def maketransparent(w):
-    # the translated windll part...
-    # a COLORREF structure is a reverse RGB order int!
-    # see https://www.pinvoke.net/search.aspx?search=COLORREF&namespace=[All]
-    # here we chose nearly black so real black (#000000) still shows up
     colorkey = 0x00030201
     hwnd = w.winfo_id()
     wnd_exstyle = windll.user32.GetWindowLongA(hwnd, -20)  # GWL_EXSTYLE
@@ -272,29 +269,20 @@ def create_new_window(event):
     if (other_window_open == False):
         win = ctk.CTkToplevel(root)
         win.geometry('400x200')
-        #win.title("New Window")
-        #win.attributes('-fullscreen', True)  # Make the window full-screen
-        #win.after(0, lambda: win.state('zoomed'))
         canvas = tk.Canvas(win, width=2000, height=2000, background='#000000')
         label = tk.Label(canvas,borderwidth=0,bg='#000000')
         label.pack()
-        #button = tk.Button(canvas, text="HAI")
         canvas.grid(row=0, column=0, sticky='nesw')
-        #canvas.pack()
-        #window.overrideredirect(True)
         win.wm_attributes('-transparentcolor','#000000')
         win.wm_attributes('-topmost', True)
         cvs_upper=tk.Canvas(win, background='#010203') #dont use all black, screws up any black trext on your canvas...
-        #cvs_upper.create_rectangle(325, 25, 375, 175, fill='red')
         cvs_upper.grid(row=0, column=0, sticky='nesw')
-        #cvs_upper.place(x=10, y=10)
         canvas.create_window(0, 0, anchor=tk.NW, window=label)
 
         filename = get_cat()
         image1 = Image.open(filename)
         test = ImageTk.PhotoImage(image1)
         label1 = ctk.CTkLabel(cvs_upper, height = 500, width = 500, fg_color="transparent", image=test)
-        #label1.image = test
         label1.place(x=500, y=80)
 
         win.after(0, lambda:win.state('zoomed'))

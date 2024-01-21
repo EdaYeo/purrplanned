@@ -31,7 +31,7 @@ def write_to_csv(entry_data, filename):
         with open(filename, mode='w', newline='') as file:
             writer = csv.DictWriter(file, fieldnames=header)
             writer.writeheader()
-            entry_data['Deadline'] = entry_data['Deadline'].strftime('%Y-%m-%d %H:%M:%S') # Parse datetime object into string
+            entry_data['Deadline'] = entry_data['Deadline'].strftime('%D-%m-%Y %H:%M:%S') # Parse datetime object into string
             writer.writerow(entry_data)
         print(f"New file {filename} created with data")
 
@@ -99,41 +99,41 @@ def delete_csv_entry(filename, title_to_delete):
         print(f"File {filename} not found")
 
 # Example usage:
-entry_data_to_write = {
-    'Title': 'Task 1',
-    'Description': 'Complete assignment',
-    'Deadline': datetime.strptime('2024-01-31 18:00:00', '%Y-%m-%d %H:%M:%S'),  # Format: YYYY-MM-DD HH:MM:SS
-    'Completion Status': 'Incomplete'
-}
+# entry_data_to_write = {
+#     'Title': 'Task 1',
+#     'Description': 'Complete assignment',
+#     'Deadline': datetime.strptime('2024-01-31 18:00:00', '%d-%m-%Y %H:%M:%S'),  # Format: YYYY-MM-DD HH:MM:SS
+#     'Completion Status': 'Incomplete'
+# }
 
-# Specify the filename (change it as needed)
-csv_filename = 'tasks.csv'
+# # Specify the filename (change it as needed)
+# csv_filename = 'tasks.csv'
 
-# Call the function with data and filename
-# write_to_csv(entry_data_to_write, csv_filename)
+# # Call the function with data and filename
+# # write_to_csv(entry_data_to_write, csv_filename)
 
-# Example usage:
-csv_filename = 'tasks.csv'
+# # Example usage:
+# csv_filename = 'tasks.csv'
 
-# Specify the title of the entry to edit
-title_to_edit = 'Updated Task'
+# # Specify the title of the entry to edit
+# title_to_edit = 'Updated Task'
 
-# Specify the updated data for the entry
-updated_entry_data = {
-    'Title': 'Updated Task',
-    'Description': 'Updated description',
-    'Deadline': datetime.strptime('2024-01-31 20:00:00', '%Y-%m-%d %H:%M:%S'),
-    'Completion Status': 'Complete'
-}
+# # Specify the updated data for the entry
+# updated_entry_data = {
+#     'Title': 'Updated Task',
+#     'Description': 'Updated description',
+#     'Deadline': datetime.strptime('2024-01-31 20:00:00', '%d-%m-%Y %H:%M:%S'),
+#     'Completion Status': 'Complete'
+# }
 
-# Call the function to edit the CSV entry by title
-# edit_csv_entry(csv_filename, title_to_edit, updated_entry_data)
+# # Call the function to edit the CSV entry by title
+# # edit_csv_entry(csv_filename, title_to_edit, updated_entry_data)
 
-# Specify the filename (change it as needed)
-csv_filename = 'tasks.csv'
+# # Specify the filename (change it as needed)
+# csv_filename = 'tasks.csv'
 
-# Specify the title of the entry to delete
-title_to_delete = 'Updated Task'
+# # Specify the title of the entry to delete
+# title_to_delete = 'Updated Task'
 
-# Call the function to delete the CSV entry by title
-# delete_csv_entry(csv_filename, title_to_delete)
+# # Call the function to delete the CSV entry by title
+# # delete_csv_entry(csv_filename, title_to_delete)
